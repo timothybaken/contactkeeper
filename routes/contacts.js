@@ -11,6 +11,7 @@ const Contact = require("../models/Contact");
 // @access  Private
 router.get("/", auth, async (req, res) => {
   try {
+    console.log("Get contacts");
     const contacts = await Contact.find({ user: req.user.id }).sort({
       date: -1,
     }); // Contacts array with the most recent contact first (date -1)
@@ -26,7 +27,7 @@ router.get("/", auth, async (req, res) => {
 // @access  Private
 router.post(
   "/",
-  [auth, [check("name", "Name is required").not().isEmpty]],
+  [auth, [check("name", "Name is required").not().isEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
