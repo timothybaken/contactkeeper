@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import ContactContext from "./contactContext";
 import contactReducer from "./contactReducer";
 import {
@@ -20,18 +20,21 @@ const ContactState = (props) => {
         type: "professional",
         email: "jj@gmail.com",
         phone: "123456",
+        id: "1",
       },
       {
         name: "John Jammy",
         type: "personal",
         email: "jjwastaken@gmail.com",
         phone: "1234567",
+        id: "2",
       },
       {
         name: "Bob Burly",
         type: "professional",
         email: "bb@gmail.com",
         phone: "12345678",
+        id: "3",
       },
     ],
   };
@@ -39,8 +42,15 @@ const ContactState = (props) => {
   const [state, dispatch] = useReducer(contactReducer, initialState);
 
   // Add Contact
+  const addContact = (contact) => {
+    contact.id = uuid(); // Adds a random id to the contact because we're not using the mongoDB id yet
+    dispatch({ type: ADD_CONTACT, payload: contact }); // dispatches to the reducer
+  };
 
   // Delete Contact
+  const deleteContact = (id) => {
+    dispatch({ type: DELETE_CONTACT, payload: id }); // dispatches to the reducer
+  };
 
   // Set Current Contact
 
@@ -53,7 +63,9 @@ const ContactState = (props) => {
   // Clear Filter
 
   return (
-    <ContactContext.Provider value={{ contacts: state.contacts }}>
+    <ContactContext.Provider
+      value={{ contacts: state.contacts, addContact, deleteContact }}
+    >
       {props.children}
     </ContactContext.Provider>
   );
