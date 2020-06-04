@@ -1,4 +1,5 @@
 import {
+  GET_CONTACTS,
   ADD_CONTACT,
   DELETE_CONTACT,
   SET_ALERT,
@@ -7,14 +8,24 @@ import {
   UPDATE_CONTACT,
   FILTER_CONTACTS,
   CLEAR_FILTER,
+  CONTACT_ERROR,
+  CLEAR_CONTACTS,
 } from "../types";
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_CONTACTS:
+      return {
+        ...state,
+        contacts: action.payload,
+        loading: false,
+      };
+
     case ADD_CONTACT:
       return {
         ...state,
-        contacts: [...state.contacts, action.payload],
+        contacts: [action.payload, ...state.contacts],
+        loading: false,
       };
 
     case UPDATE_CONTACT:
@@ -22,17 +33,19 @@ export default (state, action) => {
         ...state,
         contacts: state.contacts.map(
           (contact) =>
-            contact.id === action.payload.id ? action.payload : contact
+            contact._id === action.payload._id ? action.payload : contact
           // Maps through all contacts to find the contact with id matching the one from payload, and then replaces it with payload
         ),
+        loading: false,
       };
 
     case DELETE_CONTACT:
       return {
         ...state,
         contacts: state.contacts.filter(
-          (contact) => contact.id !== action.payload
+          (contact) => contact._id !== action.payload
         ),
+        loading: false,
       };
 
     case SET_CURRENT:
@@ -57,10 +70,25 @@ export default (state, action) => {
         }),
       };
 
+    case CLEAR_CONTACTS:
+      return {
+        ...state,
+        contacts: null,
+        filtered: null,
+        error: null,
+        current: null,
+      };
+
     case CLEAR_FILTER:
       return {
         ...state,
         filtered: null,
+      };
+
+    case CONTACT_ERROR:
+      return {
+        ...state,
+        error: action.payload,
       };
 
     default:

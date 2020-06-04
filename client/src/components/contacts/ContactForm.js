@@ -32,6 +32,7 @@ const ContactForm = () => {
       addContact(contact);
     } else {
       updateContact(contact);
+      clearCurrent();
     }
     // The functions addContact and updateContact are in our ContactState file, so we can access them here
     setContact({ name: "", email: "", phone: "", type: "personal" });
